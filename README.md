@@ -13,7 +13,7 @@ Pros:
 
 Cons:
 * RATE LIMITING FOR TOO MANY SEARCHES (can be solved with API key, but OpenCorporates has yet to issue me one)
-* Data returned isn't fully formatted yet (the address portion)
+~~ Data returned isn't fully formatted yet (the address portion) ~~
 * Can only search for business types, can't yet pull attached officers
 
 ### Install/run:
