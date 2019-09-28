@@ -16,7 +16,7 @@ Cons:
 * Data returned isn't fully formatted yet (the address portion)
 * Can only search for business types, can't yet pull attached officers
 
-###Install/run:
+### Install/run:
 * git clone https://github.com/skickar/OpenCorporatesCLI.git
 * pip3 install requests, json
 * cd OpenCorporatesCLI
