@@ -18,7 +18,8 @@ Cons:
 
 ### Install/run:
 * git clone https://github.com/skickar/OpenCorporatesCLI.git
-* pip3 install requests, json
+* pip3 install requests
+* pip3 install json
 * cd OpenCorporatesCLI
 * python3 OCQuery.py
 
