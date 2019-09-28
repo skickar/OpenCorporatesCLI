@@ -25,7 +25,7 @@ Cons:
 
 Sample output:
 
-skickar$ python3 OCQuery.py
+```skickar$ python3 OCQuery.py
 Name of company to search?
 >THERANOS, INC
 Registered Name:  THERANOS, INC. founded on  2004-04-13
@@ -97,5 +97,5 @@ Date filed:  2015-05-21
 Filing:  Creation Filing 1
 Link to filing:  None
 Date filed:  2015-05-21
-END OF RESULT
+END OF RESULT```
 
