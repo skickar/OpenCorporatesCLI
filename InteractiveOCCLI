@@ -17,7 +17,11 @@ def searchAll(data):
           print("OpenCorporates Filing Link: ", filings['results']['filings'][i]['filing']['opencorporates_url'])
 
 def searchOne(selection, data):
-    filings = (requests.get("https://api.opencorporates.com/v0.4/companies/{}/{}/filings".format(data['results']['companies'][(selection - 1)]['company']['jurisdiction_code'],data['results']['companies'][(selection-1)]['company']['company_number']))).json();
+    try:
+        filings = (requests.get("https://api.opencorporates.com/v0.4/companies/{}/{}/filings".format(data['results']['companies'][(selection - 1)]['company']['jurisdiction_code'],data['results']['companies'][(selection-1)]['company']['company_number']))).json();
+    except IndexError:
+        print("Not a valid hit number")
+        filingCall(data)
     for i in range(len(filings['results']['filings'])):
         print("Filing: ", filings['results']['filings'][i]['filing']['title'])
         print("Link to filing: ", filings['results']['filings'][i]['filing']['url'])
