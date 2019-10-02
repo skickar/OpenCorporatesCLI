@@ -1,0 +1,141 @@
+
+import requests, json
+
+def main():
+    companySearch = input("Name of company to search?\n>")
+    data = (requests.get("https://api.opencorporates.com/v0.4/companies/search?q={}".format(companySearch))).json();
+    printResults(parseResults(data))
+    filingCall(data)
+
+def searchAll(data):
+    for i in range(len(data['results']['companies'])):
+        filings = (requests.get("https://api.opencorporates.com/v0.4/companies/{}/{}/filings".format(data['results']['companies'][i]['company']['jurisdiction_code'],data['results']['companies'][i]['company']['company_number']))).json();
+        for i in range(len(filings['results']['filings'])):
+          print("Filing: ", filings['results']['filings'][i]['filing']['title'])
+          print("Link to filing: ", filings['results']['filings'][i]['filing']['url'])
+          print("Date filed: ", filings['results']['filings'][i]['filing']['date'])
+          print("OpenCorporates Filing Link: ", filings['results']['filings'][i]['filing']['opencorporates_url'])
+
+def searchOne(selection, data):
+    filings = (requests.get("https://api.opencorporates.com/v0.4/companies/{}/{}/filings".format(data['results']['companies'][(selection - 1)]['company']['jurisdiction_code'],data['results']['companies'][(selection-1)]['company']['company_number']))).json();
+    for i in range(len(filings['results']['filings'])):
+        print("Filing: ", filings['results']['filings'][i]['filing']['title'])
+        print("Link to filing: ", filings['results']['filings'][i]['filing']['url'])
+        print("Date filed: ", filings['results']['filings'][i]['filing']['date'])
+        print("OpenCorporates Filing Link: ", filings['results']['filings'][i]['filing']['opencorporates_url'])
+
+def tryPrint(testData):
+    try:
+        print(("Hit #{}:").format(i + 1))
+    except TypeError:
+        print("No Results")
+
+def parseResults(company_list):
+    #print(companyList['results']['companies'])
+    results_list = []
+    #print(company_list)
+    for companies in company_list['results']['companies']:
+        for field in companies.items():
+            results_list.append(field[1])
+    return results_list
+
+def printResults(results_list):
+    for i in range(len(results_list)):
+        print("\n\nRESULT {} OUT OF {}:\n".format(i+1, len(results_list)))
+        for field in results_list[i].items():
+            printField(field[0], field[1])
+
+def printField(title, desc):
+    exclude_fields = ['restricted_for_marketing', 'native_company_number', 'locality', 'region', 'postal_code']
+    alignment = " " * (30 - len(title))
+    if title not in exclude_fields:
+        title = title.replace('_', ' ').capitalize()
+        if isinstance(desc, list):
+            if len(desc) < 1:
+                print("NO {} FOUND".format(title.upper()))
+        elif isinstance(desc, dict):
+            for subtitle, subvalue in desc.items():
+                printField(subtitle, subvalue)
+        elif desc is None:
+            print("NO {} FOUND".format(title).upper())
+        else:
+            desc = str(desc)
+            if title == 'Branch':
+                if desc == 'F': desc = "entity is not a branch"
+                else: desc = "entity is a branch"
+            if title == "Inactive":
+                if desc == "False": desc = "enitiy is active"
+                else: desc = "entity is inactive"
+            print("{}:{}{}".format(title, alignment, desc.replace('\n', ' ')))
+
+def kodyTry():
+    for i in range(len(data['results']['companies'])):
+        print("type: {}\n\n".format(type(data)))
+        testData = "(\"Hit #{}:\").format(i + 1)(\"Hit #{}:\").format(i + 1))"
+        tryPrint(testData)
+        try:
+            print("Registered Name: ",data['results']['companies'][i]['company']['name'], "founded on ",data['results']['companies'][i]['company']['incorporation_date'] )
+        except TypeError:
+            print("No Name")
+        try:
+            print("Business Number: ",data['results']['companies'][i]['company']['company_number'])
+        except TypeError:
+            print("No Business Number")
+        try:
+            print("Inactive status: ",data['results']['companies'][i]['company']['inactive'])
+        except TypeError:
+            print("No status")
+        try:
+            print("Current status: ",data['results']['companies'][i]['company']['current_status'])
+        except TypeError:
+            print("No current status")
+        try:
+            print("Jurisdiction: ",data['results']['companies'][i]['company']['jurisdiction_code'])
+        except TypeError:
+            print("No jurisdiction")
+        try:
+            print("Active from: ",data['results']['companies'][i]['company']['incorporation_date'], " to ",data['results']['companies'][i]['company']['dissolution_date'])
+        except TypeError:
+            print("Incomplete activity information")
+        try:
+            print("Address: ",data['results']['companies'][i]['company']['registered_address']['street_address'], ",",data['results']['companies'][i]['company']['registered_address']['country'])
+        except TypeError:
+            print("No Address")
+        try:
+            print("Data Source: ", data['results']['companies'][i]['company']['source']['publisher'], "at link ",data['results']['companies'][i]['company']['source']['url'])
+        except TypeError:
+            print("No data source")
+        try:
+            print("Opencorporates URL: ", data['results']['companies'][i]['company']['opencorporates_url'])
+        except TypeError:
+            print("No Opencorporates URL")
+    print("END OF RESULT\n\n")
+
+
+
+    # NOT SURE WHERE THIS CODE GOES, SORRY KODY
+def filingCall(data):
+    filingSearch=input("Which hit number to find filings for?\nYou can select a single number, or 'all'\n>")
+    if(filingSearch == "all"):
+            print("Running search on all results...")
+            searchAll(data)
+    else:
+        try:
+            filingSearch=int(filingSearch)
+        except ValueError:
+            print("Not a valid index, try a number or 'all'.")
+        else:
+            print(("Running search on result {}...").format(filingSearch))
+            searchOne(filingSearch, data);
+
+# CALL TO MAIN FUNCTION
+
+main()
+
+##filings = (requests.get("https://api.opencorporates.com/v0.4/companies/{}/{}/filings".format(data['results']['companies'][(filingSearch-1)]['company']['jurisdiction_code'],data['results']['companies'][(filingSearch-1)]['company']['company_number']))).json();
+##for i in range(len(filings['results']['filings'])):
+##    print("Filing: ", filings['results']['filings'][i]['filing']['title'])
+##    print("Link to filing: ", filings['results']['filings'][i]['filing']['url'])
+##    print("Date filed: ", filings['results']['filings'][i]['filing']['date'])
+##    print("OpenCorporates Filing Link: ", filings['results']['filings'][i]['filing']['opencorporates_url'])
+
