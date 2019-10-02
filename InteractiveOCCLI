@@ -15,6 +15,8 @@ def searchAll(data):
           print("Link to filing: ", filings['results']['filings'][i]['filing']['url'])
           print("Date filed: ", filings['results']['filings'][i]['filing']['date'])
           print("OpenCorporates Filing Link: ", filings['results']['filings'][i]['filing']['opencorporates_url'])
+          trySearchAgain(data)
+
 
 def searchOne(selection, data):
     try:
@@ -27,6 +29,7 @@ def searchOne(selection, data):
         print("Link to filing: ", filings['results']['filings'][i]['filing']['url'])
         print("Date filed: ", filings['results']['filings'][i]['filing']['date'])
         print("OpenCorporates Filing Link: ", filings['results']['filings'][i]['filing']['opencorporates_url'])
+    trySearchAgain(data)
 
 def tryPrint(testData):
     try:
@@ -128,9 +131,22 @@ def filingCall(data):
             filingSearch=int(filingSearch)
         except ValueError:
             print("Not a valid index, try a number or 'all'.")
+            printResults(parseResults(data))
+            filingCall(data)
         else:
             print(("Running search on result {}...").format(filingSearch))
             searchOne(filingSearch, data);
+            
+def trySearchAgain(data):
+    tryAgain = input("Do you want search another result?\n Type y for yes, n to return to company search\n>")
+    if (tryAgain == 'y'):
+        printResults(parseResults(data))
+        filingCall(data)
+    if (tryAgain == 'n'):
+        main()
+    else:
+        print("Not a valid selection.\n")
+        trySearchAgain(data)
 
 # CALL TO MAIN FUNCTION
 
